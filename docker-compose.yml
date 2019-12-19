@@ -1,3 +1,7 @@
+networks:
+  web:
+    external: true
+
 version: '2'
 services:
   mariadb:
@@ -6,6 +10,8 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
       - MARIADB_USER=bn_mediawiki
       - MARIADB_DATABASE=bitnami_mediawiki
+    labels:
+      - traefik.enable=false
     volumes:
       - 'mariadb_data:/bitnami'
   mediawiki:
@@ -16,9 +22,11 @@ services:
       - MEDIAWIKI_DATABASE_USER=bn_mediawiki
       - MEDIAWIKI_DATABASE_NAME=bitnami_mediawiki
       - ALLOW_EMPTY_PASSWORD=yes
-    ports:
-      - '80:80'
-      - '443:443'
+    labels:
+      - traefik.backend=wiki
+      - traefik.frontend.rule=Host:wiki.example.com
+      - traefik.docker.network=web
+      - traefik.port=80
     volumes:
       - 'mediawiki_data:/bitnami'
     depends_on:
