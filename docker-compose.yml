@@ -27,6 +27,8 @@ services:
       - traefik.frontend.rule=Host:wiki.example.com
       - traefik.docker.network=web
       - traefik.port=80
+    networks:
+      web:
     volumes:
       - 'mediawiki_data:/bitnami'
     depends_on:
